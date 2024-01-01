@@ -45,7 +45,7 @@ window.addEventListener('scroll', scrollActive)
 const sr = ScrollReveal({
     origin: 'top',
     distance: '60px',
-    duration: 2000,
+    duration: 1500,
     delay: 10,
 //     reset: true
 });
@@ -96,7 +96,3 @@ function typeWriter(text, element) {
 }
 
 typeWriter(text, typeAnimation);
-
-
-
-
