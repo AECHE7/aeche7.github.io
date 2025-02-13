@@ -291,7 +291,7 @@ img {
 .about__container, 
 .skills__container, 
 .flipcards__container {
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
 }
