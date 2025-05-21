@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Resulta at Diskusyon ng Pag-aaral sa Pagsusugal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.10.1/lib/browser/math.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F7F7F7;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+        }
+        .stat-card {
+            background-color: #118AB2;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #118AB2;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #FFD166;
+        }
+        .chapter-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FF6B6B;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #118AB2;
+        }
+        .card {
+             background-color: white;
+             border-radius: 0.75rem;
+             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+             padding: 1.5rem;
+             margin-bottom: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #E5E7EB;
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+        th {
+            background-color: #F3F4F6;
+            font-weight: 600;
+            color: #118AB2;
+        }
+        tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .dynamic-chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .dynamic-chart-container {
+                height: 384px;
+            }
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #FF6B6B;
+        }
+        .modal-chart-container {
+            width: 100%;
+            max-width: 700px;
+            height: 400px;
+            margin: 1.5rem auto;
+        }
+        @media (min-width: 768px) {
+            .modal-chart-container {
+                height: 500px;
+            }
+        }
+        .formula {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+        .formula code {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .comp-table th, .comp-table td {
+            text-align: center;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#FF6B6B] mb-4">SUGAL: Sa Unos, Gulo, At Ligalig ng Pamumuhay</h1>
+            <p class="text-xl text-gray-600">Isang Pagsusuri sa Epekto ng Pagsusugal sa mga Mamamayan ng Brgy. San Francisco, Llanera, Nueva Ecija</p>
+        </header>
+
+        <section class="mb-12">
+            <div class="card">
+                <h2 class="section-title">Pangkalahatang Sulyap</h2>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Ang pananaliksik na ito ay sumuri sa mga epekto ng pagsusugal sa iba't ibang aspeto ng buhay ng mga residente ng Barangay San Francisco. Bagama't ang pagsusugal ay isang laganap na aktibidad, isang kapansin-pansin na natuklasan ay ang <strong class="text-[#FF6B6B]">pangkalahatang mababang persepsyon ng mga respondente sa direktang negatibong epekto nito sa kanilang pang-araw-araw na pamumuhay</strong>, maliban sa ilang partikular na sitwasyon. Gayunpaman, may mga natuklasang ugnayan na nangangailangan ng pansin.
+                </p>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h1 class="chapter-title">KABANATA IV: RESULTA NG PAG-AARAL AT DISKUSYON</h1>
+            <div class="card mb-8">
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Ang kabanatang ito ay naglalahad nang detalyado ng mga resultang nakalap mula sa isinagawang sarbey sa mga residente ng Barangay San Francisco, Llanera, Nueva Ecija. Ang mga datos ay maingat na inayos, sinuri, at inilahad gamit ang mga deskriptibo at imperensyal na estatistika alinsunod sa mga layunin ng pag-aaral. Pagkatapos ng paglalahad ng mga resulta, susuriin din ang mga implikasyon nito sa mas malalim na diskusyon.
+                </p>
+            </div>
+
+            <h2 class="section-title text-center">Sosyo-Demograpikong Katangian ng mga Respondante</h2>
+            <p class="text-center text-gray-600 mb-8">Ang unang bahagi ay nakatuon sa paglalarawan ng mga pangunahing katangian ng tatlumpung (30) respondante na lumahok sa pag-aaral, na mahalaga upang mabigyan ng konteksto ang mga sumusunod na natuklasan.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card chart-card" data-chart-id="henerasyon">
+                    <h3 class="font-semibold text-lg text-center mb-3 text-[#118AB2]">Distribusyon ayon sa Henerasyon</h3>
+                    <div class="dynamic-chart-container">
+                        <canvas id="henerasyonChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3 text-center">Pantay na representasyon mula sa Gen Z, Millennials, at Boomers, na sumasalamin sa disenyo ng pag-aaral.</p>
+                </div>
+                <div class="card chart-card" data-chart-id="kasarian">
+                    <h3 class="font-semibold text-lg text-center mb-3 text-[#118AB2]">Distribusyon ayon sa Kasarian</h3>
+                    <div class="dynamic-chart-container">
+                        <canvas id="kasarianChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3 text-center">May pantay na bilang ng mga lalaki at babaeng respondente upang maiwasan ang pagkiling.</p>
+                </div>
+                <div class="card chart-card" data-chart-id="edukasyon">
+                    <h3 class="font-semibold text-lg text-center mb-3 text-[#118AB2]">Antas ng Edukasyon</h3>
+                    <div class="dynamic-chart-container">
+                        <canvas id="edukasyonChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3 text-center">Ipinapahiwatig na ang karamihan sa mga respondante ay may mataas na antas ng pormal na edukasyon.</p>
+                </div>
+                <div class="card chart-card" data-chart-id="sibil">
+                    <h3 class="font-semibold text-lg text-center mb-3 text-[#118AB2]">Katayuang Sibil</h3>
+                    <div class="dynamic-chart-container">
+                        <canvas id="sibilChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3 text-center">Ang pinakamaraming respondante ay may asawa, na bumubuo ng 53.33% ng kabuuan.</p>
+                </div>
+                <div class="card chart-card" data-chart-id="trabaho">
+                    <h3 class="font-semibold text-lg text-center mb-3 text-[#118AB2]">Uri ng Trabaho</h3>
+                    <div class="dynamic-chart-container">
+                        <canvas id="trabahoChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3 text-center">Mahigit sa kalahati ng mga respondante (53.33%) ay self-employed.</p>
+                </div>
+                <div class="card chart-card" data-chart-id="kita">
+                    <h3 class="font-semibold text-lg text-center mb-3 text-[#118AB2]">Buwanang Kita ng Pamilya</h3>
+                    <div class="dynamic-chart-container">
+                        <canvas id="kitaChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3 text-center">Ang pinakamalaking pangkat (46.67%) ay kabilang sa mga pamilyang may buwanang kita na mas mababa sa Php 5,000.</p>
+                </div>
+            </div>
+
+            <h2 class="section-title text-center mt-12">Persepsyon sa Epekto ng Pagsusugal (Weighted Mean Analysis)</h2>
+            <p class="text-center text-gray-600 mb-8">Ang bahaging ito ay naglalahad ng mga resulta mula sa weighted mean analysis ng mga tugon ng mga respondente sa mga katanungang gumagamit ng Likert scale, na sumusukat sa kanilang mga persepsyon at karanasan ukol sa iba't ibang epekto ng pagsusugal.</p>
+            <div class="card overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th>Pahayag</th>
+                            <th>Mean</th>
+                            <th>Interpretasyon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Nakakaranas ako ng kahirapan sa pagbabayad ng pangunahing pangangailangan.</td><td>1.30</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Nakautang ako o pamilya dahil sa pagsusugal.</td><td>1.33</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Apektado ang trabaho ko dahil sa pagsusugal.</td><td>1.20</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Nagbenta ako ng gamit para sa pagsusugal.</td><td>1.07</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Ginamit ang pera para sa pagkain/edukasyon sa pagsusugal.</td><td>2.30</td><td>Mababa / Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Problema sa pagtulog.</td><td>1.10</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Stress kapag hindi nakapagsusugal.</td><td>1.23</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Depression dulot ng pagsusugal.</td><td>1.37</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Napapabayaan ang kalusugan.</td><td>1.10</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Gumagamit ng alak/substance habang nagsusugal.</td><td>1.33</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Pagtatalo sa pamilya.</td><td>1.03</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Nawalan ng tiwala ang pamilya.</td><td>1.03</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Napapabayaan ang responsibilidad.</td><td>1.13</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Hirap makisalamuha sa kapitbahay.</td><td>1.10</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                        <tr><td>Nakaranas ng kahihiyan sa komunidad.</td><td>1.03</td><td>Napakababa / Lubos na Hindi Sumasang-ayon</td></tr>
+                    </tbody>
+                </table>
+                <p class="mt-4 text-sm text-gray-600">Sa pangkalahatan, ipinapakita ng Talahanayan 7 na ang mga respondante ay may napakababang antas ng pagsang-ayon sa mga pahayag na naglalarawan ng mga negatibong epekto ng pagsusugal sa kanilang buhay. Ang mean scores para sa karamihan ng mga item ay nasa loob ng "Napakababa / Lubos na Hindi Sumasang-ayon" na kategorya.</p>
+            </div>
+
+            <h2 class="section-title text-center mt-12">Mga Ugnayan sa Pagitan ng Pagsusugal at Iba Pang Baryabol</h2>
+            <p class="text-center text-gray-600 mb-8">Pagsusuri sa mga ugnayan gamit ang Chi-Square Test at Pearson's Correlation Analysis. Mahalagang bigyang-diin na dahil sa limitadong bilang ng mga respondante (N=30), ang mga resultang ito ay itinuturing na eksploratoryo.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card stat-card bg-[#06D6A0]">
+                    <h3 class="text-2xl font-semibold mb-2">Susing Natuklasan sa Ugnayan!</h3>
+                    <p class="stat-number">r = 0.37</p>
+                    <p class="text-lg mt-1">May <strong class="font-bold">MAHINA ngunit ESTADISTIKAL NA MAKABULUHANG POSITIBONG UGNAYAN</strong> (p-value: 0.046) sa pagitan ng <strong class="font-bold">DALAS NG PAGSUSUGAL</strong> at ng mas mababang <strong class="font-bold">KATATAGAN SA PANANALAPI</strong>.</p>
+                    <p class="mt-3 text-sm">Ibig sabihin, habang tumataas ang dalas ng pagsusugal, may tendensiya ring tumaas ang mga iniuulat na problemang pinansyal ng mga respondente. Ito ang pinakamahalagang ugnayan na natuklasan sa pag-aaral.</p>
+                </div>
+                <div class="card">
+                    <h3 class="font-semibold text-lg mb-3 text-[#118AB2]">Iba pang Ugnayang Sinuri:</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li><strong class="text-gray-900">Dalas ng Pagsusugal at Henerasyon:</strong> Walang sapat na ebidensya ng makabuluhang ugnayan (Chi-Square p=0.137).</li>
+                        <li><strong class="text-gray-900">Epekto sa Trabaho at Kasarian:</strong> Walang makabuluhang ugnayan (Chi-Square p=1.000).</li>
+                        <li><strong class="text-gray-900">Dalas ng Pagsusugal at Kita ng Pamilya:</strong> Walang makabuluhang ugnayan (Pearson r=-0.18, p=0.338).</li>
+                        <li><strong class="text-gray-900">Halaga Ginagastos sa Pagsusugal at Kalidad ng Buhay:</strong> Walang makabuluhang ugnayan (Pearson r=0.25, p=0.187).</li>
+                    </ul>
+                    <p class="mt-4 text-sm text-gray-600">Ang mga resultang ito ay eksploratoryo dahil sa limitadong bilang ng respondente.</p>
+                </div>
+            </div>
+
+            <div class="card mt-6">
+                <h3 class="font-semibold text-xl mb-3 text-[#118AB2]">Pagkompyut ng Chi-Square Test ($$\chi^2$$)</h3>
+                <p class="text-gray-700 mb-2">Ang Chi-Square Test of Independence ay ginagamit upang matukoy kung mayroong estadistikal na makabuluhang ugnayan sa pagitan ng dalawang kategorikal na baryabol. Ang pormula ay:</p>
+                <div class="formula">
+                    $$\chi^2 = \sum \frac{(O_i - E_i)^2}{E_i}$$
+                </div>
+                <p class="text-gray-700 mb-4">Kung saan:</p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>$O_i$ = Observed frequency (aktuwal na bilang) sa bawat cell ng contingency table.</li>
+                    <li>$E_i$ = Expected frequency (inaasahang bilang) sa bawat cell, kung walang ugnayan sa pagitan ng mga baryabol. Ito ay kinokompyut gamit ang pormulang: $$E = \frac{(\text{row total}) \times (\text{column total})}{\text{grand total}}$$</li>
+                </ul>
+                <p class="text-gray-700">Ang resulta ng $\chi^2$ ay inihahambing sa isang critical value mula sa Chi-Square distribution table (batay sa degrees of freedom at significance level) o ginagamit ang p-value. Kung ang p-value ay mas mababa sa itinakdang significance level (hal. 0.05), nangangahulugan ito na may estadistikal na makabuluhang ugnayan.</p>
+
+                <h4 class="font-semibold text-lg mt-6 mb-2 text-[#118AB2]">Komputasyon: Dalas ng Pagsusugal vs. Henerasyon</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full comp-table" id="chiSquareDalasHenerasyonObserved">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Dalas ng Pagsusugal</th>
+                                <th colspan="3">Observed Frequencies ($O_i$)</th>
+                                <th rowspan="2">Row Total</th>
+                            </tr>
+                            <tr>
+                                <th>Gen Z</th>
+                                <th>Millennial</th>
+                                <th>Boomer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+                <div class="overflow-x-auto mt-4">
+                    <table class="min-w-full comp-table" id="chiSquareDalasHenerasyonExpected">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Dalas ng Pagsusugal</th>
+                                <th colspan="3">Expected Frequencies ($E_i$)</th>
+                                <th rowspan="2">($O_i - E_i)^2 / E_i$</th>
+                            </tr>
+                            <tr>
+                                <th>Gen Z</th>
+                                <th>Millennial</th>
+                                <th>Boomer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+                <p class="text-gray-700 mt-4">Degrees of Freedom (DoF): (4-1) * (3-1) = 3 * 2 = 6</p>
+                <p class="text-gray-700">P-value: 0.137</p>
+                <p class="text-gray-700 font-semibold mt-2">Konklusyon: Walang estadistikal na makabuluhang ugnayan sa pagitan ng dalas ng pagsusugal at henerasyon (p-value > 0.05).</p>
+
+                <h4 class="font-semibold text-lg mt-6 mb-2 text-[#118AB2]">Komputasyon: Epekto sa Trabaho vs. Kasarian</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full comp-table" id="chiSquareEpektoTrabahoKasarianObserved">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Epekto sa Trabaho</th>
+                                <th colspan="2">Observed Frequencies ($O_i$)</th>
+                                <th rowspan="2">Row Total</th>
+                            </tr>
+                            <tr>
+                                <th>Babae</th>
+                                <th>Lalaki</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+                <div class="overflow-x-auto mt-4">
+                    <table class="min-w-full comp-table" id="chiSquareEpektoTrabahoKasarianExpected">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Epekto sa Trabaho</th>
+                                <th colspan="2">Expected Frequencies ($E_i$)</th>
+                                <th rowspan="2">($O_i - E_i)^2 / E_i$</th>
+                            </tr>
+                            <tr>
+                                <th>Babae</th>
+                                <th>Lalaki</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+                <p class="text-gray-700 mt-4">Degrees of Freedom (DoF): (3-1) * (2-1) = 2 * 1 = 2</p>
+                <p class="text-gray-700">P-value: 1.000</p>
+                <p class="text-gray-700 font-semibold mt-2">Konklusyon: Walang estadistikal na makabuluhang ugnayan sa pagitan ng kasarian at ng persepsyon sa epekto ng pagsusugal sa trabaho (p-value > 0.05).</p>
+            </div>
+
+            <div class="card mt-6">
+                <h3 class="font-semibold text-xl mb-3 text-[#118AB2]">Pagkompyut ng Pearson's Correlation Coefficient ($$r$$)</h3>
+                <p class="text-gray-700 mb-2">Ang Pearson's Correlation Coefficient ($$r$$) ay sumusukat sa direksyon at lakas ng linear na relasyon sa pagitan ng dalawang continuous na baryabol. Ang pormula ay:</p>
+                <div class="formula">
+                    $$r = \frac{n(\sum xy) - (\sum x)(\sum y)}{\sqrt{[n\sum x^2 - (\sum x)^2][n\sum y^2 - (\sum y)^2]}}$$
+                </div>
+                <p class="text-gray-700 mb-4">Kung saan:</p>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>$n$ = bilang ng pares ng mga datos.</li>
+                    <li>$\sum xy$ = kabuuan ng produkto ng bawat pares ng x at y na datos.</li>
+                    <li>$\sum x$ = kabuuan ng lahat ng x na datos.</li>
+                    <li>$\sum y$ = kabuuan ng lahat ng y na datos.</li>
+                    <li>$\sum x^2$ = kabuuan ng mga squared x na datos.</li>
+                    <li>$\sum y^2$ = kabuuan ng mga squared y na datos.</li>
+                </ul>
+                <p class="text-gray-700">Ang halaga ng $$r$$ ay mula -1 hanggang +1. Ang +1 ay nagpapahiwatig ng perpektong positibong linear na relasyon, -1 ay perpektong negatibong linear na relasyon, at 0 ay walang linear na relasyon. Ang p-value ay ginagamit upang matukoy kung ang natuklasang relasyon ay estadistikal na makabuluhan.</p>
+
+                <h4 class="font-semibold text-lg mt-6 mb-2 text-[#118AB2]">Komputasyon: Dalas ng Pagsusugal (X) vs. Katatagan sa Pananalapi (Y)</h4>
+                <p class="text-gray-700 mb-2">Ang Katatagan sa Pananalapi (Financial Stability Score) ay kinompyut bilang average ng "Nakakaranas ako ng kahirapan sa pagbabayad ng pangunahing pangangailangan" at "Nakautang ako o pamilya dahil sa pagsusugal". Mas mataas na score = mas mababang katatagan.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full comp-table">
+                        <thead>
+                            <tr>
+                                <th>Respondente</th>
+                                <th>X (Dalas ng Pagsusugal)</th>
+                                <th>Y (Katatagan sa Pananalapi)</th>
+                                <th>XY</th>
+                                <th>X^2</th>
+                                <th>Y^2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pearsonTableBody1">
+                            </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Kabuuan (Sum)</strong></td>
+                                <td id="pearsonTableBody1sumX"></td>
+                                <td id="pearsonTableBody1sumY"></td>
+                                <td id="pearsonTableBody1sumXY"></td>
+                                <td id="pearsonTableBody1sumX2_"></td>
+                                <td id="pearsonTableBody1sumY2_"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <p class="text-gray-700 mt-4">N = 30</p>
+                <p class="text-gray-700">Pearson's r: <span id="pearsonTableBody1pearsonR"></span></p>
+                <p class="text-gray-700 font-semibold mt-2">Konklusyon: May mahina ngunit estadistikal na makabuluhang positibong ugnayan (p-value < 0.05). Habang tumataas ang dalas ng pagsusugal, may tendensiya ring tumaas ang mga iniuulat na problemang pinansyal.</p>
+
+                <h4 class="font-semibold text-lg mt-6 mb-2 text-[#118AB2]">Komputasyon: Dalas ng Pagsusugal (X) vs. Kita ng Pamilya (Y)</h4>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full comp-table">
+                        <thead>
+                            <tr>
+                                <th>Respondente</th>
+                                <th>X (Dalas ng Pagsusugal)</th>
+                                <th>Y (Kita ng Pamilya)</th>
+                                <th>XY</th>
+                                <th>X^2</th>
+                                <th>Y^2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pearsonTableBody2">
+                            </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Kabuuan (Sum)</strong></td>
+                                <td id="pearsonTableBody2sumX"></td>
+                                <td id="pearsonTableBody2sumY"></td>
+                                <td id="pearsonTableBody2sumXY"></td>
+                                <td id="pearsonTableBody2sumX2_"></td>
+                                <td id="pearsonTableBody2sumY2_"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <p class="text-gray-700 mt-4">N = 30</p>
+                <p class="text-gray-700">Pearson's r: <span id="pearsonTableBody2pearsonR"></span></p>
+                <p class="text-gray-700">P-value: 0.338</p>
+                <p class="text-gray-700 font-semibold mt-2">Konklusyon: Walang estadistikal na makabuluhang ugnayan sa pagitan ng dalas ng pagsusugal at kita ng pamilya (p-value > 0.05).</p>
+
+                <h4 class="font-semibold text-lg mt-6 mb-2 text-[#118AB2]">Komputasyon: Halaga ng Ginagastos (X) vs. Kalidad ng Buhay (Y)</h4>
+                <p class="text-gray-700 mb-2">Ang Kalidad ng Buhay (Quality of Life Score) ay kinompyut bilang average ng Problemang Pinansyal, Kalusugan, at Panlipunang Ugnayan na mga pahayag.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full comp-table">
+                        <thead>
+                            <tr>
+                                <th>Respondente</th>
+                                <th>X (Halaga ng Ginagastos)</th>
+                                <th>Y (Kalidad ng Buhay)</th>
+                                <th>XY</th>
+                                <th>X^2</th>
+                                <th>Y^2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pearsonTableBody3">
+                            </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Kabuuan (Sum)</strong></td>
+                                <td id="pearsonTableBody3sumX"></td>
+                                <td id="pearsonTableBody3sumY"></td>
+                                <td id="pearsonTableBody3sumXY"></td>
+                                <td id="pearsonTableBody3sumX2_"></td>
+                                <td id="pearsonTableBody3sumY2_"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <p class="text-gray-700 mt-4">N = 30</p>
+                <p class="text-gray-700">Pearson's r: <span id="pearsonTableBody3pearsonR"></span></p>
+                <p class="text-gray-700 font-semibold mt-2">Konklusyon: Walang estadistikal na makabuluhang ugnayan sa pagitan ng halaga ng ginagastos sa pagsusugal at pangkalahatang kalidad ng buhay (p-value > 0.05).</p>
+            </div>
+
+
+            <h2 class="section-title text-center mt-12">Diskusyon ng mga Natuklasan</h2>
+            <div class="card">
+                <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    Ang mga natuklasan sa pag-aaral na ito ay nagbibigay ng mahalagang pananaw sa epekto ng pagsusugal sa Barangay San Francisco. Kapansin-pansin ang <strong class="text-[#FF6B6B]">mababang persepsyon ng mga respondente sa negatibong epekto ng pagsusugal</strong> sa kanilang buhay, trabaho, kalusugan, at ugnayan sa pamilya at komunidad. Maaaring ito ay indikasyon ng normalisasyon ng pagsusugal sa komunidad, o posibleng hindi lubos na nauunawaan ng mga indibidwal ang mas malalim na implikasyon ng kanilang paglahok.
+                </p>
+                <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    Gayunpaman, ang <strong class="text-[#06D6A0]">makabuluhang positibong ugnayan sa pagitan ng dalas ng pagsusugal at mas mababang katatagan sa pananalapi</strong> ay nagpapakita ng isang kritikal na isyu. Ipinahihiwatig nito na kahit hindi direktang kinikilala ng mga respondente ang matinding problema, ang regular na paglahok sa pagsusugal ay may direktang epekto sa kanilang kakayahang pinansyal. Ito ay nagpapahiwatig ng isang "silent" o hindi lantad na problema na maaaring lumala sa paglipas ng panahon, lalo na sa isang komunidad na may katamtamang antas ng kahirapan at seasonal na trabaho.
+                </p>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Ang kawalan ng makabuluhang ugnayan sa pagitan ng dalas ng pagsusugal at henerasyon, kasarian, kita ng pamilya, at kalidad ng buhay ay maaaring dahil sa limitadong sample size ng pag-aaral. Gayunpaman, ito ay nagpapahiwatig na ang isyu ng pagsusugal ay hindi limitado sa isang partikular na demograpiko, kundi isang isyung panlipunan na nangangailangan ng komprehensibong tugon. Ang mga natuklasan ay sumusuporta sa Systems Theory, na nagpapakita kung paano ang pagsusugal ay hindi isang isolated na phenomenon, kundi isang bahagi ng mas malawak at magkakaugnay na sistema ng pamumuhay ng mga mamamayan.
+                </p>
+            </div>
+
+            <h2 class="section-title text-center mt-12">Konklusyon</h2>
+            <div class="card">
+                <ul class="list-disc list-inside text-gray-700 space-y-3 leading-relaxed">
+                    <li>Sa pangkalahatan, <strong class="text-[#FF6B6B]">hindi itinuturing ng mga respondante na ang pagsusugal ay may malaking negatibong epekto</strong> sa iba't ibang aspeto ng kanilang buhay.</li>
+                    <li>Gayunpaman, ang natagpuang <strong class="text-[#06D6A0]">mahina ngunit makabuluhang positibong ugnayan</strong> sa pagitan ng dalas ng pagsusugal at mas mababang katatagan sa pananalapi ay nagpapahiwatig na maaaring mayroong ilang indibidwal o pamilya na nakakaranas ng pinansyal na hamon.</li>
+                    <li>Walang sapat na ebidensya upang sabihing mayroong makabuluhang pagkakaiba sa dalas ng pagsusugal sa iba't ibang henerasyon o na ang kasarian ay may kaugnayan sa persepsyon ng epekto ng pagsusugal sa trabaho.</li>
+                    <li>Hindi rin napatunayan ang pagkakaroon ng makabuluhang direktang ugnayan sa pagitan ng dalas ng pagsusugal at kita ng pamilya, at sa pagitan ng halaga ng ginagastos sa pagsusugal at pangkalahatang kalidad ng buhay.</li>
+                    <li>Mahalagang tandaan na ang mga konklusyong ito ay batay sa <strong class="text-gray-900">limitadong bilang ng respondante (N=30)</strong>. Ang mas malaking sample size ay maaaring magbigay ng mas matatag na resulta.</li>
+                </ul>
+            </div>
+
+            <h2 class="section-title text-center mt-12">Mga Rekomendasyon</h2>
+            <p class="text-center text-gray-600 mb-8">Batay sa mga natuklasan, ang mga sumusunod na rekomendasyon ay iminumungkahi:</p>
+            <div class="card">
+                <ul class="list-disc list-inside text-gray-700 space-y-3 leading-relaxed">
+                    <li><strong class="text-gray-900">Pagpapalakas ng Edukasyon at Kamalayan:</strong> Bagama't hindi itinuturing ng karamihan sa mga respondante na negatibo ang epekto ng pagsusugal, mahalagang palakasin ang edukasyon at kampanya sa kamalayan tungkol sa mga potensyal na panganib at negatibong kahihinatnan ng labis na pagsusugal. Ito ay maaaring isagawa sa pamamagitan ng mga seminar, workshop, o pamamahagi ng impormasyon sa komunidad.</li>
+                    <li><strong class="text-gray-900">Pagsubaybay sa mga Indibidwal na Nanganganib:</strong> Dahil sa natagpuang ugnayan sa pagitan ng dalas ng pagsusugal at katatagan sa pananalapi, maaaring magkaroon ng mga programa o mekanismo para sa pagsubaybay at pagtulong sa mga indibidwal na maaaring nanganganib na magkaroon ng problema sa pagsusugal at mga kaugnay na isyu sa pananalapi.</li>
+                    <li><strong class="text-gray-900">Karagdagang Pag-aaral:</strong> Dahil sa limitadong bilang ng respondante, iminumungkahi ang karagdagang pag-aaral na may mas malaking sample size upang beripikahin ang mga natuklasan at tuklasin ang iba pang posibleng ugnayan sa pagitan ng iba't ibang baryabol na may kaugnayan sa pagsusugal sa komunidad.</li>
+                    <li><strong class="text-gray-900">Pagsasama ng Qualitative Research:</strong> Upang mas maunawaan ang mga personal na karanasan at pananaw ng mga residente ukol sa pagsusugal, maaaring magsagawa rin ng qualitative research tulad ng mga focus group discussion o indibidwal na panayam.</li>
+                    <li><strong class="text-gray-900">Pagtutulungan ng Komunidad:</strong> Mahalagang magkaroon ng pagtutulungan sa loob ng komunidad, kabilang ang mga lider ng barangay, mga organisasyon, at mga residente mismo, upang matugunan ang anumang posibleng negatibong epekto ng pagsusugal at mapanatili ang kapakanan ng lahat.</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-300">
+            <p class="text-sm text-gray-500">&copy; 2025 Pangkat ng Mananaliksik, FILDIS 1110. Central Luzon State University. Halaw mula sa pananaliksik na "SUGAL: Sa Unos, Gulo, At Ligalig ng Pamumuhay".</p>
+            <p class="text-xs text-gray-400 mt-1">Infographic na nilikha para sa layuning pang-edukasyon.</p>
+        </footer>
+
+    </div>
+
+    <div id="chartModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal()">✖</button>
+            <h3 id="modalChartTitle" class="font-bold text-xl text-center mb-4 text-[#118AB2]"></h3>
+            <div class="modal-chart-container">
+                <canvas id="modalChartCanvas"></canvas>
+            </div>
+            <p id="modalChartExplanation" class="text-base text-gray-700 leading-relaxed"></p>
+        </div>
+    </div>
+
+    <script>
+        const rawDataset = `Edad	Kasarian	Edukasyon	Estado Sibil	Trabaho	Kita ng Pamilya	Bilang ng Miyembro ng Pamilya	Uri ng Sugal	Dalas ng Pagsusugal	Tagal ng Sesyon	Halaga ng Ginagastos	Dahilan ng Pagsusugal	Nakakaranas ako ng kahirapan sa pagbabayad ng pangunahing pangangailangan.	Nakautang ako o pamilya dahil sa pagsusugal.	Apektado ang trabaho ko dahil sa pagsusugal.	Nagbenta ako ng gamit para sa pagsusugal.	Ginamit ang pera para sa pagkain/edukasyon sa pagsusugal.	Problema sa pagtulog.	Stress kapag hindi nakapagsusugal.	Depression dulot ng pagsusugal.	Napapabayaan ang kalusugan.	Gumagamit ng alak/substance habang nagsusugal.	Pagtatalo sa pamilya.	Nawalan ng tiwala ang pamilya.	Napapabayaan ang responsibilidad.	Hirap makisalamuha sa kapitbahay.	Nakaranas ng kahihiyan sa komunidad.
+53	Lalaki	Post-graduate	May Asawa	Self-employed	<5000	6	Card game(Tong-its, Pusoy, sakla), Jueteng	Napakadalas (3+ beses/linggo)	Napakahaba (>6 oras)	1000	Libangan, Paghahanap ng dagdag na kita, Thrill o excitement	1	5	1	1	5	1	1	1	5	1	1	1	1	1	1
+74	Lalaki	High School	May Asawa	Empleado	<5000	4	Jueteng	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	100	Libangan	1	1	1	1	3	1	1	1	1	1	1	1	1	1	1
+20	Babae	Kolehiyo	Walang Asawa	Walang Trabaho	<5000	5	E-games	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	500	Libangan	1	2	1	1	2	1	1	1	1	1	1	1	1	1	1
+20	Babae	Kolehiyo	Walang Asawa	Self-employed	5001-10000	6	E-games	Bihira (1-2 beses/buwan)	Medyo Mahaba (3-4 oras)	300	Nakasanayan	3	3	1	3	2	1	3	2	3	2	1	2	2	2	2
+28	Babae	Kolehiyo	May Asawa	Self-employed	5001-10000	4	Card game(Tong-its, Pusoy, sakla), Jueteng, E-games	Bihira (1-2 beses/buwan)	Katamtaman (1-2 oras)	200	Libangan	3	2	2	1	5	1	1	3	1	1	1	1	1	1	1
+35	Babae	Kolehiyo	May Asawa	Self-employed	15001-20000	4	Jueteng	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	100	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+28	Babae	Post-graduate	Walang Asawa	Empleado	5001-10000	1	E-games	Bihira (1-2 beses/buwan)	Katamtaman (1-2 oras)	1000	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+30	Babae	Kolehiyo	May Asawa	Empleado	10001-15000	3	Jueteng	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	100	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+35	Lalaki	Kolehiyo	May Asawa	Empleado	10001-15000	3	E-games	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	200	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+30	Lalaki	Kolehiyo	Walang Asawa	Empleado	5001-10000	1	E-games	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	200	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+30	Lalaki	Kolehiyo	Walang Asawa	Self-employed	<5000	6	E-games	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	300	Libangan	2	1	1	1	5	1	1	1	1	1	1	1	1	1	1
+47	Babae	Kolehiyo	Hiwalay	Self-employed	<5000	2	Card game(Tong-its, Pusoy, sakla), Jueteng	Paminsan-minsan (3-4 beses/buwan)	Medyo Mahaba (3-4 oras)	1000	Libangan, Pakikisama, Pagiwas sa stress	3	2	3	1	4	3	4	3	2	1	1	1	4	3	1
+26	Babae	Post-graduate	May Asawa	Self-employed	<5000	5	Jueteng	Bihira (1-2 beses/buwan)	Katamtaman (1-2 oras)	500	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+19	Babae	Kolehiyo	Walang Asawa	Walang Trabaho	<5000	6	E-games	Paminsan-minsan (3-4 beses/buwan)	Maikli (<1 oras)	500	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+50	Babae	Post-graduate	May Asawa	Self-employed	<5000	4	Card game(Tong-its, Pusoy, sakla), Jueteng	Bihira (1-2 beses/buwan)	Medyo Mahaba (3-4 oras)	200	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+18	Babae	High School	Walang Asawa	Walang Trabaho	<5000	4	E-games	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	100	Libangan	1	1	1	1	2	1	1	1	1	1	1	1	1	1	1
+56	Babae	Kolehiyo	May Asawa	Empleado	5001-10000	3	Card game(Tong-its, Pusoy, sakla)	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	1000	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+26	Lalaki	Kolehiyo	May Asawa	Self-employed	<5000	5	Sabong	Paminsan-minsan (3-4 beses/buwan)	Maikli (<1 oras)	500	Libangan	2	1	1	1	1	1	1	1	1	1	2	1	1	1	1
+43	Babae	Elementary	Walang Asawa	Empleado	<5000	1	Card game(Tong-its, Pusoy, sakla), Jueteng, E-games	Bihira (1-2 beses/buwan)	Katamtaman (1-2 oras)	500	Libangan, Nakasanayan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+21	Lalaki	Kolehiyo	Walang Asawa	Self-employed	5001-10000	5	E-games	Madalas (1-2 beses/linggo)	Medyo Mahaba (3-4 oras)	1000	Libangan, Paghahanap ng dagdag na kita	1	1	3	1	1	1	3	2	1	1	1	1	1	1	1
+56	Babae	High School	May Asawa	Self-employed	<5000	4	Card game(Tong-its, Pusoy, sakla), Jueteng	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	200	Libangan	1	1	1	1	4	1	1	1	1	1	1	1	1	1	1
+19	Lalaki	Kolehiyo	Walang Asawa	Walang Trabaho	<5000	7	E-games	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	500	Libangan, Thrill o excitement	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+50	Lalaki	Kolehiyo	May Asawa	Self-employed	10001-15000	3	Sabong, Card game(Tong-its, Pusoy, sakla), Jueteng	Bihira (1-2 beses/buwan)	Katamtaman (1-2 oras)	1000	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+19	Lalaki	Kolehiyo	Walang Asawa	Walang Trabaho	5001-10000	5	Card game(Tong-its, Pusoy, sakla)	Paminsan-minsan (3-4 beses/buwan)	Katamtaman (1-2 oras)	500	Libangan, Pagiwas sa stress	2	1	1	1	5	1	1	3	1	3	1	1	1	1	1
+45	Lalaki	High School	Balo	Self-employed	<5000	3	Card game(Tong-its, Pusoy, sakla), Jueteng, E-games	Paminsan-minsan (3-4 beses/buwan)	Medyo Mahaba (3-4 oras)	600	Libangan, Paghahanap ng dagdag na kita, Pagiwas sa stress	1	1	2	1	5	1	1	1	1	1	1	1	1	1	1
+25	Lalaki	Post-graduate	May Asawa	Empleado	10001-15000	5	Card game(Tong-its, Pusoy, sakla)	Paminsan-minsan (3-4 beses/buwan)	Medyo Mahaba (3-4 oras)	1000	Libangan, Paghahanap ng dagdag na kita	1	1	1	1	5	1	1	2	1	4	1	1	1	1	1
+50	Lalaki	Kolehiyo	May Asawa	Empleado	10001-15000	5	Sabong, Card game(Tong-its, Pusoy, sakla), Jueteng	Paminsan-minsan (3-4 beses/buwan)	Katamtaman (1-2 oras)	500	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+42	Babae	Kolehiyo	May Asawa	Self-employed	15001-20000	3	Jueteng	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	100	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+40	Lalaki	Kolehiyo	May Asawa	Self-employed	>20000	3	Jueteng	Bihira (1-2 beses/buwan)	Maikli (<1 oras)	100	Libangan	1	1	1	1	1	1	1	1	1	1	1	1	1	1	1
+28	Lalaki	Kolehiyo	Walang Asawa	Self-employed	5001-10000	4	E-games	Bihira (1-2 beses/buwan)	Katamtaman (1-2 oras)	500	Libangan	1	2	1	1	5	2	1	3	1	1	1	1	1	1	1
+`;
+
+        const CHART_COLORS = {
+            red: '#FF6B6B',
+            yellow: '#FFD166',
+            green: '#06D6A0',
+            blue: '#118AB2',
+            pink: '#EF476F',
+            lightBlue: '#72CFF9',
+            purple: '#7A4EBF'
+        };
+
+        const SHARED_TOOLTIP_CONFIG = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        };
+        
+        function wrapLabel(label, maxWidth) {
+            if (label.length <= maxWidth) {
+                return label;
+            }
+            const words = label.split(' ');
+            let currentLine = '';
+            const lines = [];
+            for (const word of words) {
+                if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            }
+            lines.push(currentLine.trim());
+            return lines;
+        }
+
+        function parseDataset(rawData) {
+            const lines = rawData.trim().split('\n');
+            const headers = lines[0].split('\t');
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split('\t');
+                const rowObject = {};
+                headers.forEach((header, index) => {
+                    rowObject[header.trim()] = values[index] ? values[index].trim() : '';
+                });
+                data.push(rowObject);
+            }
+            return data;
+        }
+
+        const parsedData = parseDataset(rawDataset);
+
+        const dalasMapping = {
+            'Bihira (1-2 beses/buwan)': 1,
+            'Paminsan-minsan (3-4 beses/buwan)': 2,
+            'Madalas (1-2 beses/linggo)': 3,
+            'Napakadalas (3+ beses/linggo)': 4
+        };
+
+        const kitaMapping = {
+            '<5000': 1,
+            '5001-10000': 2,
+            '10001-15000': 3,
+            '15001-20000': 4,
+            '>20000': 5
+        };
+
+        const henerasyonMapping = {
+            '18-26': 'Gen Z',
+            '27-42': 'Millennial',
+            '43+': 'Boomer'
+        };
+
+        function getHenerasyon(edad) {
+            if (edad >= 18 && edad <= 26) return 'Gen Z';
+            if (edad >= 27 && edad <= 42) return 'Millennial';
+            return 'Boomer'; // Assuming 43+ for Boomer
+        }
+
+        function calculateChiSquare(observed) {
+            const rowTotals = {};
+            const colTotals = {};
+            let grandTotal = 0;
+
+            for (const rowKey in observed) {
+                rowTotals[rowKey] = 0;
+                for (const colKey in observed[rowKey]) {
+                    rowTotals[rowKey] += observed[rowKey][colKey];
+                }
+                grandTotal += rowTotals[rowKey];
+            }
+
+            for (const colKey in observed[Object.keys(observed)[0]]) {
+                colTotals[colKey] = 0;
+                for (const rowKey in observed) {
+                    colTotals[colKey] += observed[rowKey][colKey];
+                }
+            }
+
+            const expected = {};
+            const chiSquareContributions = {};
+            let chiSquareStatistic = 0;
+
+            for (const rowKey in observed) {
+                expected[rowKey] = {};
+                chiSquareContributions[rowKey] = {};
+                for (const colKey in observed[rowKey]) {
+                    const expectedValue = (rowTotals[rowKey] * colTotals[colKey]) / grandTotal;
+                    expected[rowKey][colKey] = expectedValue;
+                    // Avoid division by zero for contribution if expectedValue is 0
+                    const contribution = expectedValue === 0 ? 0 : math.pow(observed[rowKey][colKey] - expectedValue, 2) / expectedValue;
+                    chiSquareContributions[rowKey][colKey] = contribution;
+                    chiSquareStatistic += contribution;
+                }
+            }
+
+            return { observed, expected, chiSquareContributions, chiSquareStatistic, rowTotals, colTotals, grandTotal };
+        }
+
+        function calculatePearsonR(x, y) {
+            const n = x.length;
+            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+
+            for (let i = 0; i < n; i++) {
+                sumX += x[i];
+                sumY += y[i];
+                sumXY += x[i] * y[i];
+                sumX2 += x[i] * x[i];
+                sumY2 += y[i] * y[i];
+            }
+
+            const numerator = n * sumXY - sumX * sumY;
+            const denominator = math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+
+            const r = denominator === 0 ? 0 : numerator / denominator;
+            return { r: r.toFixed(2), sumX, sumY, sumXY, sumX2, sumY2 };
+        }
+
+        // --- Chi-Square Data Preparation ---
+        const observedDalasHenerasyon = {
+            'Bihira (1-2 beses/buwan)': { 'Gen Z': 0, 'Millennial': 0, 'Boomer': 0 },
+            'Madalas (1-2 beses/linggo)': { 'Gen Z': 0, 'Millennial': 0, 'Boomer': 0 },
+            'Napakadalas (3+ beses/linggo)': { 'Gen Z': 0, 'Millennial': 0, 'Boomer': 0 },
+            'Paminsan-minsan (3-4 beses/buwan)': { 'Gen Z': 0, 'Millennial': 0, 'Boomer': 0 }
+        };
+
+        parsedData.forEach(row => {
+            const dalas = row['Dalas ng Pagsusugal'];
+            const edad = parseInt(row['Edad']);
+            const henerasyon = getHenerasyon(edad);
+            if (observedDalasHenerasyon[dalas] && observedDalasHenerasyon[dalas][henerasyon] !== undefined) {
+                observedDalasHenerasyon[dalas][henerasyon]++;
+            }
+        });
+        const chiSquareDalasHenerasyon = calculateChiSquare(observedDalasHenerasyon);
+
+        const observedEpektoTrabahoKasarian = {
+            '1': { 'Babae': 0, 'Lalaki': 0 },
+            '2': { 'Babae': 0, 'Lalaki': 0 },
+            '3': { 'Babae': 0, 'Lalaki': 0 },
+            '4': { 'Babae': 0, 'Lalaki': 0 },
+            '5': { 'Babae': 0, 'Lalaki': 0 }
+        };
+
+        parsedData.forEach(row => {
+            const epektoTrabaho = row['Apektado ang trabaho ko dahil sa pagsusugal.'];
+            const kasarian = row['Kasarian'];
+            if (observedEpektoTrabahoKasarian[epektoTrabaho] && observedEpektoTrabahoKasarian[epektoTrabaho][kasarian] !== undefined) {
+                observedEpektoTrabahoKasarian[epektoTrabaho][kasarian]++;
+            }
+        });
+        const chiSquareEpektoTrabahoKasarian = calculateChiSquare(observedEpektoTrabahoKasarian);
+
+        // --- Pearson Correlation Data Preparation ---
+        const dalasPagsusugalNum = parsedData.map(row => dalasMapping[row['Dalas ng Pagsusugal']]);
+        const kitaPamilyaNum = parsedData.map(row => kitaMapping[row['Kita ng Pamilya']]);
+
+        const katataganPinansyal = parsedData.map(row => {
+            const kph = parseInt(row['Nakakaranas ako ng kahirapan sa pagbabayad ng pangunahing pangangailangan.']);
+            const nk = parseInt(row['Nakautang ako o pamilya dahil sa pagsusugal.']);
+            return (kph + nk) / 2;
+        });
+
+        const qualityOfLifeFields = [
+            'Problema sa pagtulog.',
+            'Stress kapag hindi nakapagsusugal.',
+            'Depression dulot ng pagsusugal.',
+            'Napapabayaan ang kalusugan.',
+            'Gumagamit ng alak/substance habang nagsusugal.',
+            'Pagtatalo sa pamilya.',
+            'Nawalan ng tiwala ang pamilya.',
+            'Napapabayaan ang responsibilidad.',
+            'Hirap makisalamuha sa kapitbahay.',
+            'Nakaranas ng kahihiyan sa komunidad.'
+        ];
+        const qualityOfLifeScore = parsedData.map(row => {
+            let sum = 0;
+            qualityOfLifeFields.forEach(field => {
+                sum += parseInt(row[field]);
+            });
+            return sum / qualityOfLifeFields.length;
+        });
+        const halagaGinagastosNum = parsedData.map(row => parseInt(row['Halaga ng Ginagastos']));
+
+        const pearsonDalasKatatagan = calculatePearsonR(dalasPagsusugalNum, katataganPinansyal);
+        const pearsonDalasKita = calculatePearsonR(dalasPagsusugalNum, kitaPamilyaNum);
+        const pearsonHalagaKalidad = calculatePearsonR(halagaGinagastosNum, qualityOfLifeScore);
+
+        // --- Populate Chi-Square Tables ---
+        function populateChiSquareTable(tableId, result, type) {
+            const table = document.getElementById(tableId);
+            if (!table) {
+                console.error(`Error: Table with ID '${tableId}' not found.`);
+                return;
+            }
+            const tbody = table.querySelector('tbody');
+            if (!tbody) {
+                console.error(`Error: tbody not found within table ID '${tableId}'.`);
+                return;
+            }
+            tbody.innerHTML = '';
+            const rowKeys = Object.keys(result.observed);
+            const colKeys = Object.keys(result.observed[rowKeys[0]]);
+
+            rowKeys.forEach(rowKey => {
+                const tr = document.createElement('tr');
+                tr.innerHTML += `<td>${rowKey}</td>`; // First column for row label
+
+                if (type === 'observed') {
+                    colKeys.forEach(colKey => {
+                        tr.innerHTML += `<td>${result.observed[rowKey][colKey]}</td>`;
+                    });
+                    tr.innerHTML += `<td>${result.rowTotals[rowKey]}</td>`; // Row total for observed table
+                } else { // This handles the expected table with contributions
+                    let rowContributionSum = 0;
+                    let contributionHtmlParts = [];
+                    colKeys.forEach(colKey => {
+                        tr.innerHTML += `<td>${result.expected[rowKey][colKey].toFixed(2)}</td>`;
+                        const val = result.chiSquareContributions[rowKey][colKey];
+                        rowContributionSum += val;
+                        contributionHtmlParts.push(val.toFixed(2));
+                    });
+                    // Add the (O-E)^2/E sum column
+                    tr.innerHTML += `<td>(${contributionHtmlParts.join(' + ')}) = ${rowContributionSum.toFixed(2)}</td>`;
+                }
+                tbody.appendChild(tr);
+            });
+
+            // Add total row for observed table
+            if (type === 'observed') {
+                const totalRow = document.createElement('tr');
+                totalRow.innerHTML += `<td><strong>Column Total</strong></td>`;
+                colKeys.forEach(colKey => {
+                    totalRow.innerHTML += `<td><strong>${result.colTotals[colKey]}</strong></td>`;
+                });
+                totalRow.innerHTML += `<td><strong>${result.grandTotal}</strong></td>`;
+                tbody.appendChild(totalRow);
+            } else { // Add total chi-square row for expected table
+                 const totalRow = document.createElement('tr');
+                 // Colspan for the "Total Chi-Square" label: 1 (for first column) + colKeys.length (for expected values)
+                 totalRow.innerHTML += `<td colspan="${1 + colKeys.length}"><strong>Total Chi-Square ($\chi^2$)</strong></td>`;
+                 totalRow.innerHTML += `<td><strong>${result.chiSquareStatistic.toFixed(2)}</strong></td>`; // The actual chi-square value
+                 tbody.appendChild(totalRow);
+            }
+        }
+
+        // --- Populate Pearson Tables ---
+        function populatePearsonTable(tableBodyId, xData, yData, pearsonResult) {
+            const tbody = document.getElementById(tableBodyId);
+            if (!tbody) {
+                console.error(`Error: tbody with ID '${tableBodyId}' not found.`);
+                return;
+            }
+            tbody.innerHTML = '';
+            for (let i = 0; i < xData.length; i++) {
+                const tr = document.createElement('tr');
+                const xVal = xData[i];
+                const yVal = yData[i];
+                tr.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${xVal}</td>
+                    <td>${yVal.toFixed(2)}</td>
+                    <td>${(xVal * yVal).toFixed(2)}</td>
+                    <td>${(xVal * xVal).toFixed(2)}</td>
+                    <td>${(yVal * yVal).toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+
+            // Update footer sums and Pearson R
+            // Ensure the IDs used here match the HTML footer element IDs
+            document.getElementById(tableBodyId + 'sumX').textContent = pearsonResult.sumX.toFixed(2);
+            document.getElementById(tableBodyId + 'sumY').textContent = pearsonResult.sumY.toFixed(2);
+            document.getElementById(tableBodyId + 'sumXY').textContent = pearsonResult.sumXY.toFixed(2);
+            document.getElementById(tableBodyId + 'sumX2_').textContent = pearsonResult.sumX2.toFixed(2);
+            document.getElementById(tableBodyId + 'sumY2_').textContent = pearsonResult.sumY2.toFixed(2);
+            document.getElementById(tableBodyId + 'pearsonR').textContent = pearsonResult.r;
+        }
+
+        // --- Chart Configurations and Explanations ---
+        const chartConfigs = {
+            henerasyon: {
+                type: 'doughnut',
+                data: {
+                    labels: ['Gen Z (18-26 taon)', 'Millennial (27-42 taon)', 'Boomer (43+ taon)'],
+                    datasets: [{
+                        label: 'Distribusyon ayon sa Henerasyon',
+                        data: [10, 10, 10],
+                        backgroundColor: [CHART_COLORS.red, CHART_COLORS.yellow, CHART_COLORS.green],
+                        hoverOffset: 4
+                    }]
+                },
+                options: SHARED_TOOLTIP_CONFIG,
+                title: 'Distribusyon ng Respondente ayon sa Henerasyon',
+                explanation: 'Ang pag-aaral na ito ay maingat na idinisenyo upang magkaroon ng pantay na representasyon mula sa tatlong pangunahing henerasyon: Gen Z, Millennials, at Boomers. Ang bawat henerasyon ay binubuo ng sampung (10) respondente, na kumakatawan sa 33.33% ng kabuuang bilang. Ang balanseng distribusyong ito ay mahalaga upang mapadali ang paghahambing sa pagitan ng mga henerasyon at masuri kung paano nagkakaiba o nagkakapareho ang epekto ng pagsusugal sa iba\'t ibang pangkat ng edad sa komunidad.'
+            },
+            kasarian: {
+                type: 'doughnut',
+                data: {
+                    labels: ['Lalaki', 'Babae'],
+                    datasets: [{
+                        label: 'Distribusyon ayon sa Kasarian',
+                        data: [15, 15],
+                        backgroundColor: [CHART_COLORS.blue, CHART_COLORS.pink],
+                        hoverOffset: 4
+                    }]
+                },
+                options: SHARED_TOOLTIP_CONFIG,
+                title: 'Distribusyon ng Respondente ayon sa Kasarian',
+                explanation: 'Upang matiyak ang pagiging walang kinikilingan ng mga resulta, nagkaroon ng pantay na bilang ng mga lalaki at babaeng respondente sa pag-aaral. Labinlimang (15) respondente (50.0%) ay mga lalaki, at ang natitirang labinlima (15) (50.0%) ay mga babae. Ang balanseng representasyong ito ay naglalayong maiwasan ang anumang pagkiling sa kasarian sa mga pangkalahatang natuklasan at masiguro na ang mga pananaw ng parehong kasarian ay nabibigyan ng sapat na pansin sa pagsusuri.'
+            },
+            edukasyon: {
+                type: 'bar',
+                data: {
+                    labels: ['Elementarya', 'High School', 'Kolehiyo', 'Post-graduate Degree'].map(label => wrapLabel(label, 16)),
+                    datasets: [{
+                        label: 'Bilang ng Respondente',
+                        data: [1, 4, 20, 5],
+                        backgroundColor: [CHART_COLORS.red, CHART_COLORS.yellow, CHART_COLORS.green, CHART_COLORS.blue],
+                    }]
+                },
+                options: { ...SHARED_TOOLTIP_CONFIG, indexAxis: 'y' },
+                title: 'Antas ng Edukasyon ng mga Respondente',
+                explanation: 'Ayon sa datos, ang karamihan sa mga respondente (66.67%) ay nakatapos ng kolehiyo, na siyang pinakamalaking pangkat. Mayroon ding mga nakatapos ng post-graduate degree (16.67%), high school (13.33%), at elementarya (3.33%). Ipinapahiwatig nito na ang pagsusugal ay hindi limitado sa isang partikular na antas ng edukasyon at maaaring makaapekto sa mga indibidwal mula sa iba\'t ibang antas ng pormal na pag-aaral.'
+            },
+            sibil: {
+                type: 'bar',
+                data: {
+                    labels: ['Walang Asawa', 'May Asawa', 'Hiwalay', 'Balo'].map(label => wrapLabel(label, 16)),
+                    datasets: [{
+                        label: 'Bilang ng Respondente',
+                        data: [12, 16, 1, 1],
+                        backgroundColor: [CHART_COLORS.pink, CHART_COLORS.lightBlue, CHART_COLORS.purple, CHART_COLORS.yellow],
+                    }]
+                },
+                options: { ...SHARED_TOOLTIP_CONFIG, indexAxis: 'y' },
+                title: 'Katayuang Sibil ng mga Respondente',
+                explanation: 'Makikita na ang pinakamaraming respondente (53.33%) ay may asawa. Sumunod ang mga walang asawa (40.00%), at mayroon ding tig-isang respondente na hiwalay sa asawa o balo (tig-3.33%). Ang distribusyong ito ay nagpapakita na ang pagsusugal ay nakakaapekto sa mga indibidwal anuman ang kanilang katayuang sibil, at maaaring may iba\'t ibang implikasyon sa pamilya at personal na buhay depende sa kanilang katayuan.'
+            },
+            trabaho: {
+                type: 'pie',
+                data: {
+                    labels: ['Self-employed', 'Empleyado', 'Walang Trabaho'].map(label => wrapLabel(label, 16)),
+                    datasets: [{
+                        label: 'Bilang ng Respondente',
+                        data: [16, 9, 5],
+                        backgroundColor: [CHART_COLORS.green, CHART_COLORS.blue, CHART_COLORS.red],
+                        hoverOffset: 4
+                    }]
+                },
+                options: SHARED_TOOLTIP_CONFIG,
+                title: 'Uri ng Trabaho ng mga Respondente',
+                explanation: 'Mahigit sa kalahati ng mga respondente (53.33%) ay self-employed, habang 30.00% ay empleyado sa iba\'t ibang sektor, at 16.67% ay walang trabaho. Ang mataas na porsyento ng self-employed ay maaaring magpahiwatig ng hindi regular na kita, na posibleng makaapekto sa kanilang kakayahang pinansyal at maging salik sa paglahok sa pagsusugal.'
+            },
+            kita: {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Mas mababa sa Php 5,000', 
+                        'Php 5,001 - Php 10,000', 
+                        'Php 10,001 - Php 15,000', 
+                        'Php 15,001 - Php 20,000', 
+                        'Higit sa Php 20,000'
+                    ].map(label => wrapLabel(label,16)),
+                    datasets: [{
+                        label: 'Bilang ng Pamilya',
+                        data: [14, 8, 3, 3, 2],
+                        backgroundColor: [CHART_COLORS.yellow, CHART_COLORS.pink, CHART_COLORS.lightBlue, CHART_COLORS.purple, CHART_COLORS.green],
+                    }]
+                },
+                options: {
+                    ...SHARED_TOOLTIP_CONFIG,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+                title: 'Buwanang Kita ng Pamilya ng mga Respondente',
+                explanation: 'Ang pinakamalaking pangkat ng mga respondente (46.67%) ay kabilang sa mga pamilyang may buwanang kita na mas mababa sa Php 5,000. Ito ay nagpapatingkad sa posibilidad na ang pagsusugal ay maaaring magdulot ng karagdagang pasanin sa pinansyal sa mga pamilyang may limitadong pinagkukunan ng kita, na nagpapalala sa kanilang kalagayan sa ekonomiya.'
+            }
+        };
+
+        let activeCharts = {};
+
+        function initializeChart(chartId) {
+            const ctx = document.getElementById(chartId + 'Chart').getContext('2d');
+            const config = chartConfigs[chartId];
+            activeCharts[chartId] = new Chart(ctx, config);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            for (const id in chartConfigs) {
+                initializeChart(id);
+            }
+
+            document.querySelectorAll('.chart-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const chartId = card.dataset.chartId;
+                    openModal(chartId);
+                });
+            });
+
+            // Populate computation tables
+            populateChiSquareTable('chiSquareDalasHenerasyonObserved', chiSquareDalasHenerasyon, 'observed');
+            populateChiSquareTable('chiSquareDalasHenerasyonExpected', chiSquareDalasHenerasyon, 'expected');
+            populateChiSquareTable('chiSquareEpektoTrabahoKasarianObserved', chiSquareEpektoTrabahoKasarian, 'observed');
+            populateChiSquareTable('chiSquareEpektoTrabahoKasarianExpected', chiSquareEpektoTrabahoKasarian, 'expected');
+
+            populatePearsonTable('pearsonTableBody1', dalasPagsusugalNum, katataganPinansyal, pearsonDalasKatatagan);
+            populatePearsonTable('pearsonTableBody2', dalasPagsusugalNum, kitaPamilyaNum, pearsonDalasKita);
+            populatePearsonTable('pearsonTableBody3', halagaGinagastosNum, qualityOfLifeScore, pearsonHalagaKalidad);
+        });
+
+        let modalChartInstance = null;
+
+        function openModal(chartId) {
+            const modal = document.getElementById('chartModal');
+            const modalChartTitle = document.getElementById('modalChartTitle');
+            const modalChartCanvas = document.getElementById('modalChartCanvas');
+            const modalChartExplanation = document.getElementById('modalChartExplanation');
+            const config = chartConfigs[chartId];
+
+            modalChartTitle.textContent = config.title;
+            modalChartExplanation.textContent = config.explanation;
+
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+            }
+
+            const newCanvas = document.createElement('canvas');
+            newCanvas.id = 'modalChartCanvas';
+            modalChartCanvas.parentNode.replaceChild(newCanvas, modalChartCanvas);
+
+            const modalCtx = newCanvas.getContext('2d');
+            modalChartInstance = new Chart(modalCtx, config);
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('chartModal');
+            modal.classList.add('hidden');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+                modalChartInstance = null;
+            }
+        }
+    </script>
+</body>
+</html>
